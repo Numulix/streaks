@@ -12,13 +12,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.sub,
-      },
-    }),
+    session: ({ session, token }) => {
+      if (session.user && token.sub) {
+        session.user.id = token.sub
+      }
+      return session
+    },
+    jwt: ({ token, user }) => {
+      if (user) {
+        token.sub = user.id
+      }
+      return token
+    },
   },
   pages: {
     signIn: '/auth/signin',
