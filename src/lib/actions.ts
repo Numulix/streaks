@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { withAuth } from '@/lib/auth-utils'
 
 const CreateHabitSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100),
@@ -15,13 +16,7 @@ const CreateHabitSchema = z.object({
     .optional(),
 })
 
-export async function createHabit(formData: FormData) {
-  const session = await getServerSession(authOptions)
-
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
-  }
-
+async function _createHabit(userId: string, formData: FormData) {
   const validateFields = CreateHabitSchema.safeParse({
     title: formData.get('title'),
     description: formData.get('description'),
@@ -40,7 +35,7 @@ export async function createHabit(formData: FormData) {
         title,
         description: description || '',
         color: color || '#3B82F6',
-        userId: session.user.id,
+        userId: userId,
       },
     })
 
@@ -50,13 +45,9 @@ export async function createHabit(formData: FormData) {
   }
 }
 
-export async function updateHabit(formData: FormData, id: string) {
-  const session = await getServerSession(authOptions)
+export const createHabit = withAuth(_createHabit)
 
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
-  }
-
+async function _updateHabit(userId: string, formData: FormData, id: string) {
   const validateFields = CreateHabitSchema.safeParse({
     title: formData.get('title'),
     description: formData.get('description'),
@@ -73,7 +64,7 @@ export async function updateHabit(formData: FormData, id: string) {
     await prisma.habit.update({
       where: {
         id,
-        userId: session.user.id,
+        userId: userId,
       },
       data: {
         title,
@@ -88,18 +79,14 @@ export async function updateHabit(formData: FormData, id: string) {
   }
 }
 
-export async function deleteHabit(id: string) {
-  const session = await getServerSession(authOptions)
+export const updateHabit = withAuth(_updateHabit)
 
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
-  }
-
+async function _deleteHabit(userId: string, id: string) {
   try {
     await prisma.habit.delete({
       where: {
         id,
-        userId: session.user.id,
+        userId: userId,
       },
     })
 
@@ -109,7 +96,9 @@ export async function deleteHabit(id: string) {
   }
 }
 
-export async function toggleCompletion(habitId: string, date: Date) {
+export const deleteHabit = withAuth(_deleteHabit)
+
+async function _toggleCompletion(userId: string, habitId: string, date: Date) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user?.id) {
@@ -137,7 +126,7 @@ export async function toggleCompletion(habitId: string, date: Date) {
         data: {
           habitId,
           date: dateOnly,
-          userId: session.user.id,
+          userId: userId,
         },
       })
     }
@@ -147,3 +136,5 @@ export async function toggleCompletion(habitId: string, date: Date) {
     throw new Error('Failed to toggle completion')
   }
 }
+
+export const toggleCompletion = withAuth(_toggleCompletion)
