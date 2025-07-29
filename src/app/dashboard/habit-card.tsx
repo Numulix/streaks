@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { DeleteHabitDialog } from '@/app/dashboard/delete-habit-dialog'
+import { EditHabitDialog } from '@/app/dashboard/edit-habit-dialog'
 
 type HabitCardProps = {
   habit: Habit
@@ -18,6 +19,7 @@ type HabitCardProps = {
 
 export function HabitCard({ habit }: HabitCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
 
   return (
     <>
@@ -43,7 +45,7 @@ export function HabitCard({ habit }: HabitCardProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setIsEditDialogOpen(true)}>
               <Pencil className="mr-2 h-4 w-4" />
               <span>Edit</span>
             </DropdownMenuItem>
@@ -62,6 +64,12 @@ export function HabitCard({ habit }: HabitCardProps) {
         habitId={habit.id}
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
+      />
+
+      <EditHabitDialog
+        habit={habit}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
       />
     </>
   )
