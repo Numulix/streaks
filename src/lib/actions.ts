@@ -1,8 +1,5 @@
 'use server'
 import { z } from 'zod'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { withAuth } from '@/lib/auth-utils'
@@ -98,14 +95,12 @@ async function _deleteHabit(userId: string, id: string) {
 
 export const deleteHabit = withAuth(_deleteHabit)
 
-async function _toggleCompletion(userId: string, habitId: string, date: Date) {
-  const session = await getServerSession(authOptions)
-
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
-  }
-
-  const dateOnly = new Date(date.toDateString())
+async function _toggleCompletion(
+  userId: string,
+  habitId: string,
+  date: string
+) {
+  const dateOnly = new Date(date)
 
   try {
     const existing = await prisma.completion.findUnique({

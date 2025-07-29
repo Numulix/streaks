@@ -8,6 +8,14 @@ export type Habit = {
   updatedAt: Date
 }
 
+export type Completion = {
+  id: string
+  date: Date
+  userId: string
+  habitId: string
+  createdAt: Date
+}
+
 export type HabitWithCompletion = Habit & {
   completions: Array<{
     id: string

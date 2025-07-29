@@ -1,14 +1,18 @@
 'use client'
 
-import { Habit } from '@/types/habit'
+import { Completion, Habit } from '@/types/habit'
 import CreateHabitForm from '@/components/create-habit-form'
-import { HabitCard } from '@/app/dashboard/habit-card'
+import { HabitTrackingGrid } from '@/app/dashboard/habit-tracking-grid'
 
 type DashboardContentProps = {
   habits: Habit[]
+  completions: Completion[]
 }
 
-export function DashboardContent({ habits }: DashboardContentProps) {
+export function DashboardContent({
+  habits,
+  completions,
+}: DashboardContentProps) {
   return (
     <div className="container mx-auto space-y-8 p-6">
       <div className="flex items-center justify-between">
@@ -23,11 +27,12 @@ export function DashboardContent({ habits }: DashboardContentProps) {
           </p>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {habits.map(habit => (
-            <HabitCard habit={habit} key={habit.id} />
-          ))}
-        </div>
+        // <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        //   {habits.map(habit => (
+        //     <HabitCard habit={habit} key={habit.id} />
+        //   ))}
+        // </div>
+        <HabitTrackingGrid habits={habits} completions={completions} />
       )}
     </div>
   )
