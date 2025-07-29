@@ -2,6 +2,7 @@
 
 import { Habit } from '@/types/habit'
 import CreateHabitForm from '@/components/create-habit-form'
+import { HabitCard } from '@/app/dashboard/habit-card'
 
 type DashboardContentProps = {
   habits: Habit[]
@@ -24,8 +25,7 @@ export function DashboardContent({ habits }: DashboardContentProps) {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {habits.map(habit => (
-            <p key={habit.id}>{habit.title}</p>
-            // TODO: create habit card
+            <HabitCard habit={habit} key={habit.id} />
           ))}
         </div>
       )}
