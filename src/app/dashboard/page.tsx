@@ -3,6 +3,7 @@ import { Header } from '@/components/layout/header'
 import { prisma } from '@/lib/prisma'
 import { DashboardContent } from '@/app/dashboard/dashboard-content'
 import { subDays } from 'date-fns'
+import { getHabitAnalytics } from '@/lib/data'
 
 async function getDashboardData(userId: string) {
   const sevenDaysAgo = subDays(new Date(), 6)
@@ -22,12 +23,19 @@ async function getDashboardData(userId: string) {
 
 export default async function Dashboard() {
   const userId = await getAuthenticatedUserId()
-  const { habits, completions } = await getDashboardData(userId)
+  const [{ habits, completions }, habitsWithAnalytics] = await Promise.all([
+    getDashboardData(userId),
+    getHabitAnalytics(userId),
+  ])
 
   return (
     <>
       <Header />
-      <DashboardContent habits={habits} completions={completions} />
+      <DashboardContent
+        habits={habits}
+        completions={completions}
+        analytics={habitsWithAnalytics}
+      />
     </>
   )
 }
