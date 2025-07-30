@@ -22,9 +22,14 @@ const getLastSevenDays = () => {
 type GridProps = {
   habits: Habit[]
   completions: Completion[]
+  onHabitClick: (habit: string) => void
 }
 
-export function HabitTrackingGrid({ habits, completions }: GridProps) {
+export function HabitTrackingGrid({
+  habits,
+  completions,
+  onHabitClick,
+}: GridProps) {
   const days = getLastSevenDays()
   const [isPending, startTransition] = useTransition()
   const [activeDialog, setActiveDialog] = useState<{
@@ -93,14 +98,22 @@ export function HabitTrackingGrid({ habits, completions }: GridProps) {
 
             return (
               <div key={habit.id} className="flex items-center">
-                <div className="flex-1 px-6 py-4">
-                  <p className="font-semibold">{habit.title}</p>
-                  {habit.description && (
-                    <p className="text-sm text-gray-500">{habit.description}</p>
-                  )}
-                  <p className="text-xs text-gray-400">
-                    Created: {format(new Date(habit.createdAt), 'MMM d, yyyy')}
-                  </p>
+                <div
+                  className="flex-1 cursor-pointer p-4 hover:bg-gray-50"
+                  onClick={() => onHabitClick(habit.id)}
+                >
+                  <div className="flex-1 px-6 py-4">
+                    <p className="font-semibold">{habit.title}</p>
+                    {habit.description && (
+                      <p className="text-sm text-gray-500">
+                        {habit.description}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-400">
+                      Created:{' '}
+                      {format(new Date(habit.createdAt), 'MMM d, yyyy')}
+                    </p>
+                  </div>
                 </div>
 
                 {days.map(day => {
