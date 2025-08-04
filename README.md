@@ -4,7 +4,7 @@
 
 This project was built to master the frontend full-stack TypeScript ecosystem, leveraging the power of Next.js App Router, server-side data fetching, and a seamless developer experience with a fully integrated toolchain.
 
-[Streaks-Demo.mp4](Streaks-Demo.mp4)
+https://github.com/user-attachments/assets/60fe8858-2c4e-4c01-8019-7232a6c731cb
 
 ## ✨ Features
 
