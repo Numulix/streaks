@@ -4,6 +4,8 @@
 
 This project was built to master the frontend full-stack TypeScript ecosystem, leveraging the power of Next.js App Router, server-side data fetching, and a seamless developer experience with a fully integrated toolchain.
 
+[Streaks-Demo.mp4](Streaks-Demo.mp4)
+
 ## ✨ Features
 
 * **Secure Authentication:** Google OAuth sign-in managed by NextAuth.js.
